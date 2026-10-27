@@ -1,11 +1,3 @@
-# FinGuard: Financial Application Security Monitor
-> **Author / Trainee:** Minase Nikola Mita  
-> **Trainee ID:** `CTC-7022-26` | **Program:** Cybersecurity  
-> **Supervisor:** Amir | **Date:** October 2026  
-> **Target Platforms:** Windows 10/11 & Linux (Cross-platform Core)
-
----
-
 ## 1. Executive Summary & Problem Addressed
 When consumers conduct financial operations (e.g., Commercial Bank of Ethiopia (CBE), Telebirr, Dashen Bank, Awash Bank, Bank of Abyssinia, PRIDE), conventional antivirus applications periodically scan after malicious execution has already taken place.
 
