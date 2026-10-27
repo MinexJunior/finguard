@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinGuard | Financial Application Endpoint Security Shield</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- TOP NAVIGATION & STATUS HUD -->
+    <header class="top-nav">
+      <div class="logo-cluster">
+        <div class="shield-icon-badge">
+          <svg class="shield-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>FinGuard <span class="edition-tag">CORE v0.1</span></h1>
+          <p class="tagline">Financial Pre-Flight Endpoint Integrity Guard</p>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <div class="telemetry-mode-selector">
+          <label class="switch-label">Telemetry Source:</label>
+          <div class="toggle-pill">
+            <button id="btn-mode-threats" class="mode-btn active" onclick="setTelemetryMode(false)">Synthetic Threats</button>
+            <button id="btn-mode-live" class="mode-btn" onclick="setTelemetryMode(true)">Live Host ProcFS</button>
+          </div>
+        </div>
+
+        <button id="btn-refresh-scan" class="action-btn cyan-btn" onclick="triggerScan()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+          Instant Pre-Flight Scan
+        </button>
+      </div>
+    </header>
+
+    <!-- EXECUTIVE METRICS OVERVIEW -->
+    <section class="metrics-grid">
+      <!-- Risk Score Gauge -->
+      <div class="metric-card risk-gauge-card glassmorphism">
+        <div class="card-header">
+          <span class="card-title">COMPOSITE RISK GAUGE</span>
+          <span id="tier-badge" class="status-badge critical">CRITICAL</span>
+        </div>
+        <div class="gauge-content">
+          <div class="radial-gauge-wrapper">
+            <svg class="radial-gauge" viewBox="0 0 100 100">
+              <circle class="gauge-bg" cx="50" cy="50" r="42"/>
+              <circle id="gauge-stroke" class="gauge-fill" cx="50" cy="50" r="42"/>
+            </svg>
+            <div class="gauge-center-text">
+              <span id="risk-score-value" class="risk-number">80</span>
+              <span class="risk-max">/100</span>
+            </div>
+          </div>
+          <div class="gauge-meta">
+            <div class="meta-item">
+              <span class="meta-label">PRE-FLIGHT STATUS</span>
+              <span id="decision-text" class="meta-value alert-red">BLOCK LAUNCH</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">SCAN LATENCY</span>
+              <span id="scan-latency-val" class="meta-value">65 &mu;s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Card -->
+      <div class="metric-card stats-card glassmorphism">
+        <div class="card-header">
+          <span class="card-title">TELEMETRY INVENTORY</span>
+          <span class="pulse-indicator"></span>
+        </div>
+        <div class="stats-items-grid">
+          <div class="stat-box">
+            <span class="stat-number" id="stat-procs-scanned">14</span>
+            <span class="stat-label">Processes Evaluated</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number stat-alert" id="stat-anomalies-count">4</span>
+            <span class="stat-label">Anomalous Processes</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number stat-green" id="stat-clean-count">10</span>
+            <span class="stat-label">Verified Baselines</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number stat-cyan" id="stat-sockets-count">2</span>
+            <span class="stat-label">Active Sockets</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action / Remediation Card -->
+      <div class="metric-card remediation-card glassmorphism">
+        <div class="card-header">
+          <span class="card-title">PRE-FLIGHT ENFORCEMENT</span>
+          <span id="enforce-status-pill" class="pill-badge pill-red">ENFORCING</span>
+        </div>
+        <div class="enforce-summary" id="enforce-summary-container">
+          <p id="enforce-desc" class="enforce-text">Financial applications are locked to prevent credential theft or transaction alteration until active hazards are remediated.</p>
+          <div class="action-buttons-row">
+            <button class="action-btn red-btn-outline" onclick="resetRemediation()">Reset Simulation State</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANCIAL APPLICATIONS PROTECTED LAUNCHPAD -->
+    <section class="section-block">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+          <h2>Protected Financial Targets (Pre-Flight Gatekeeper)</h2>
+        </div>
+        <span class="section-subtitle">Click "Launch App" to test pre-flight integrity inspection</span>
+      </div>
+
+      <div class="targets-grid" id="targets-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- ACTIVE THREATS & REMEDIATION LIST -->
+    <section class="section-block">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <h2>Active Threats & Intercepted Hazards (<span id="threats-badge-count">0</span>)</h2>
+        </div>
+      </div>
+
+      <div class="threats-list" id="threats-container">
+        <!-- Threat cards rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- STATIC PE FILE & AUTHENTICODE DROPZONE -->
+    <section class="section-block">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="4 17 10 11 4 5"/>
+            <line x1="12" y1="19" x2="20" y2="19"/>
+          </svg>
+          <h2>Static PE Binary Analyzer & Authenticode Inspector</h2>
+        </div>
+        <span class="section-subtitle">C++20 In-Memory PE32/PE32+ Header, Section Entropy & IAT Danger Profiler</span>
+      </div>
+
+      <div class="pe-analyzer-container glassmorphism">
+        <div class="pe-input-row">
+          <input type="text" id="pe-filepath-input" class="cyber-input" value="samples/suspicious_dropper.exe" placeholder="Path to executable or DLL...">
+          <button class="action-btn purple-btn" onclick="inspectPeFile()">Analyze Binary</button>
+        </div>
+        <div class="pe-results" id="pe-results-container">
+          <p class="placeholder-text">Click "Analyze Binary" to inspect sample executable metadata, section entropy, and Authenticode signatures.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE PROCESS INVENTORY TABLE -->
+    <section class="section-block">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="8" y1="6" x2="21" y2="6"/>
+            <line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/>
+            <line x1="3" y1="6" x2="3.01" y2="6"/>
+            <line x1="3" y1="12" x2="3.01" y2="12"/>
+            <line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+          <h2>Endpoint Process Inventory (<span id="proc-table-count">0</span>)</h2>
+        </div>
+      </div>
+
+      <div class="table-card glassmorphism">
+        <div class="table-responsive">
+          <table class="cyber-table">
+            <thead>
+              <tr>
+                <th>PID</th>
+                <th>PPID</th>
+                <th>Process Name</th>
+                <th>Disk Path</th>
+                <th>Integrity Level</th>
+                <th>Elevated</th>
+              </tr>
+            </thead>
+            <tbody id="process-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRE-FLIGHT GATEWAY MODAL -->
+    <div id="preflight-modal" class="modal-overlay hidden">
+      <div class="modal-card glassmorphism">
+        <div class="modal-header">
+          <div class="modal-header-icon" id="modal-shield-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="modal-header-text">
+            <h3 id="modal-target-name">FinGuard Pre-Flight Security Check</h3>
+            <span id="modal-target-url" class="modal-target-subtitle">Scanning system state...</span>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+        </div>
+
+        <div class="modal-body" id="modal-content-area">
+          <!-- Dynamic Pre-Flight Scan Results -->
+        </div>
+
+        <div class="modal-footer" id="modal-footer-area">
+          <button class="action-btn gray-btn" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

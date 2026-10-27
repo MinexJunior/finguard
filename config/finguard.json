@@ -1,0 +1,40 @@
+{
+  "protected_apps": [
+    "CBE",
+    "Telebirr",
+    "Dashen Bank",
+    "Awash Bank",
+    "Bank of Abyssinia",
+    "PRIDE"
+  ],
+  "weights": {
+    "unknown_publisher": 15,
+    "unsigned_executable": 20,
+    "recently_installed": 5,
+    "runs_in_background": 10,
+    "suspicious_network": 20,
+    "sensitive_permissions": 20,
+    "process_injection": 30,
+    "known_malicious_hash": 100,
+    "trusted_application": -30
+  },
+  "thresholds": {
+    "medium": 30,
+    "high": 60,
+    "critical": 100
+  },
+  "trusted_publishers": [
+    "Commercial Bank of Ethiopia",
+    "Ethio Telecom",
+    "Microsoft Corporation",
+    "Google LLC",
+    "Bank of Abyssinia",
+    "Dashen Bank",
+    "Awash Bank"
+  ],
+  "known_malicious_hashes": [
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "5d41402abc4b2a76b9719d911017c592",
+    "deadbeefcafebabe112233445566778899aabbccddeeff001122334455667788"
+  ]
+}
